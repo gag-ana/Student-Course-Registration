@@ -11,12 +11,21 @@
       margin: 0;
       padding: 0;
       text-align: center;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
 
     header {
       background-color: #0056b3;
       color: white;
       padding: 20px;
+    }
+
+    header img {
+      height: 50px;
+      vertical-align: middle;
+      margin-right: 10px;
     }
 
     nav {
@@ -35,7 +44,15 @@
     }
 
     main {
+      flex: 1;
       padding: 40px 20px;
+    }
+
+    .quotes {
+      font-style: italic;
+      margin: 30px auto;
+      max-width: 600px;
+      color: #333;
     }
 
     .action-buttons {
@@ -61,30 +78,33 @@
       background-color: #0056b3;
       color: white;
       padding: 10px;
-      position: fixed;
-      bottom: 0;
-      width: 100%;
+      text-align: center;
     }
   </style>
 </head>
 <body>
   <header>
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="Regilearn Logo">
     <h1>Welcome to Regilearn</h1>
     <nav>
-      <a href="/register">Register</a>
-      <a href="/login">Login</a>
-      <a href="/courses">Courses</a>
-      <a href="/departments">Departments</a>
+      <a href="{{ url_for('register') }}">Register</a>
+      <a href="{{ url_for('login') }}">Login</a>
+      <a href="{{ url_for('courses') }}">Courses</a>
+      <a href="{{ url_for('departments') }}">Departments</a>
     </nav>
   </header>
 
   <main>
     <p>This is your first webpage!</p>
 
+    <div class="quotes">
+      <p>"Education is the most powerful weapon which you can use to change the world."</p>
+      <p>"The beautiful thing about learning is that no one can take it away from you."</p>
+    </div>
+
     <div class="action-buttons">
-      <a href="/register">Register Now</a>
-      <a href="/login">Login</a>
-      <a href="/catloc">Explore by Catloc</a>
+      <a href="{{ url_for('register') }}">Register</a>
+      <a href="{{ url_for('login') }}">Login</a>
     </div>
   </main>
 
