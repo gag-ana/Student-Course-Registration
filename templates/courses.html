@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Regilearn Courses</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    header, footer {
+      background-color: #0056b3;
+      color: white;
+      text-align: center;
+      padding: 15px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 15px;
+      font-weight: bold;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    main {
+      padding: 30px;
+    }
+
+    section {
+      margin-bottom: 40px;
+    }
+
+    h2 {
+      color: #0056b3;
+      border-bottom: 2px solid #ccc;
+      padding-bottom: 5px;
+    }
+
+    ul {
+      list-style-type: none;
+      padding-left: 0;
+    }
+
+    li {
+      background-color: #fff;
+      margin: 10px 0;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .course-info {
+      flex: 1 1 70%;
+      text-align: left;
+    }
+
+    .course-info h3 {
+      margin: 0 0 5px;
+      font-size: 18px;
+      color: #0077cc;
+    }
+
+    .course-meta {
+      font-size: 14px;
+      color: #555;
+    }
+
+    .view-button {
+      flex: 1 1 25%;
+      text-align: right;
+    }
+
+    .view-button a {
+      background-color: #0077cc;
+      color: white;
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+
+    .view-button a:hover {
+      background-color: #005fa3;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Regilearn Engineering Courses</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="departments.html">Departments</a>
+      <a href="register.html">Register</a>
+      <a href="login.html">Login</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- ISE -->
+    <section>
+      <h2>Information Science Engineering (ISE)</h2>
+      <ul>
+        <li>
+          <div class="course-info">
+            <h3>Introduction to Cloud Computing (ISE101)</h3>
+            <div class="course-meta">Duration: 6 weeks | Platform: Alison</div>
+          </div>
+          <div class="view-button">
+            <a href="https://alison.com/course/introduction-to-mobile-and-cloud-computing-revised" target="_blank">View Course</a>
+          </div>
+        </li>
+        <li>
+          <div class="course-info">
+            <h3>Blockchain Developer (ISE102)</h3>
+            <div class="course-meta">Duration: 8 weeks | Platform: Alison</div>
+          </div>
+          <div class="view-button">
+            <a href="https://alison.com/course/blockchain-developer-course" target="_blank">View Course</a>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- CSE -->
+    <section>
+      <h2>Computer Science Engineering (CSE)</h2>
+      <ul>
+        <li>
+          <div class="course-info">
+            <h3>Introduction to Python Tools (CSE101)</h3>
+            <div class="course-meta">Duration: 5 weeks | Platform: Alison</div>
+          </div>
+          <div class="view-button">
+            <a href="https://alison.com/course/introduction-to-python" target="_blank">View Course</a>
+          </div>
+        </li>
+        <li>
+          <div class="course-info">
+            <h3>Fullstack Development (CSE102)</h3>
+            <div class="course-meta">Duration: 10 weeks | Platform: Simplilearn</div>
+          </div>
+          <div class="view-button">
+            <a href="https://www.simplilearn.com/full-stack-developer-course-mern-certification-training" target="_blank">View Course</a>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ECE -->
+    <section>
+      <h2>Electronics and Communication Engineering (ECE)</h2>
+      <ul>
+        <li>
+          <div class="course-info">
+            <h3>Fundamentals of Digital Circuits and Systems (ECE101)</h3>
+            <div class="course-meta">Duration: 6 weeks | Platform: Alison</div>
+          </div>
+          <div class="view-button">
+            <a href="https://www.alison.com/course/introduction-to-digital-systems" target="_blank">View Course</a>
+          </div>
+        </li>
+        <li>
+          <div class="course-info">
+            <h3>Introduction to C and Assembly Language Programming (ECE102)</h3>
+            <div class="course-meta">Duration: 6 weeks | Platform: Alison</div>
+          </div>
+          <div class="view-button">
+            <a href="https://www.alison.com/course/c-programming-basics" target="_blank">View Course</a>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- EEE -->
+    <section>
+      <h2>Electrical and Electronics Engineering (EEE)</h2>
+      <ul>
+        <li>
+          <div class="course-info">
+            <h3>Electric Power Systems - Single and 3-phase Systems (EEE101)</h3>
+            <div class="course-meta">Duration: 7 weeks | Platform: Alison</div>
+          </div>
+          <div class="view-button">
+            <a href="https://alison.com/course/electrical-power-systems" target="_blank">View Course</a>
+          </div>
+        </li>
+        <li>
+          <div class="course-info">
+            <h3>Electrical Engineering Theory (EEE102)</h3>
+            <div class="course-meta">Duration: 8 weeks | Platform: Alison</div>
+          </div>
+          <div class="view-button">
+            <a href="https://alison.com/course/electrical-engineering-principles" target="_blank">View Course</a>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- AIML -->
+    <section>
+      <h2>Artificial Intelligence and Machine Learning (AIML)</h2>
+      <ul>
+        <li>
+          <div class="course-info">
+            <h3>General AI for Beginners (AIML101)</h3>
+            <div class="course-meta">Duration: 6 weeks | Platform: Alison</div>
+          </div>
+          <div class="view-button">
+            <a href="https://alison.com/course/introduction-to-artificial-intelligence" target="_blank">View Course</a>
+          </div>
+        </li>
+        <li>
+          <div class="course-info">
+            <h3>General AI for Data Analysts (AIML102)</h3>
+            <div class="course-meta">Duration: 7 weeks | Platform: Alison</div>
+          </div>
+          <div class="view-button">
+            <a href="https://alison.com/course/machine-learning-for-data-analysts" target="_blank">View Course</a>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ME -->
+    <section>
+      <h2>Mechanical Engineering (ME)</h2>
+      <ul>
+        <li>
+          <div class="course-info">
+            <h3>Internal Combustion Engine Theory (ME101)</h3>
+            <div class="course-meta">Duration: 8 weeks | Platform: Alison</div>
+          </div>
+          <div class="view-button">
+            <a href="https://alison.com/course/internal-combustion-engine-technology" target="_blank">View Course</a>
+          </div>
+        </li>
+        <li>
+          <div class="course-info">
+            <h3>Introduction to Mechanical Measuring Systems (ME102)</h3>
+            <div class="course-meta">Duration: 5 weeks | Platform: Alison</div>
+          </div>
+          <div class="view-button">
+            <a href="https://alison.com/course/introduction-to-mechanical-measurement" target="_blank">View Course</a>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- CV -->
+    <section>
+  <h2>Civil Engineering (CV)</h2>
+  <ul>
+    <li>
+      <div class="course-info">
+        <h3>Basics of Concrete Testing (CV101)</h3>
+        <div class="course-meta">Duration: 5 weeks | Platform: Alison</div>
+      </div>
+      <div class="view-button">
+        <a href="https://alison.com/course/concrete-technology-basics" target="_blank">View Course</a>
+      </div>
+    </li>
+    <li>
+      <div class="course-info">
+        <h3>LEED V4: Building Design and Construction (CV102)</h3>
+        <div class="course-meta">Duration: 7 weeks | Platform: Alison</div>
+      </div>
+      <div class="view-button">
+        <a href="https://alison.com/course/leed-v4-building-design-construction" target="_blank">View Course</a>
+      </div>
+    </li>
+  </ul>
+</section>
