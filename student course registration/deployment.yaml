@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: student-registration-deployment
+  labels:
+    app: student-registration
+spec:
+  replicas: 2   # Number of Pods (containers) to run
+  selector:
+    matchLabels:
+      app: student-registration
+  template:
+    metadata:
+      labels:
+        app: student-registration
+    spec:
+      containers:
+        - name: student-registration
+          image: your-dockerhub-username/student-registration:latest   # <-- Replace this
+          ports:
+            - containerPort: 5000
+          env:
+            - name: FLASK_ENV
+              value: "production"
