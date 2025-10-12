@@ -26,7 +26,7 @@ pipeline {
                 withCredentials([string(credentialsId: 'gaga70', variable: 'DOCKER_PASS')]) {
                     sh "echo ${DOCKER_PASS} | docker login -u gaga70 --password-stdin"
                     sh "docker push ${DOCKER_IMAGE}:latest"
-                }
+                
             }
         }
 
@@ -51,4 +51,5 @@ pipeline {
             echo ' Deployment Failed!'
         }
     }
+}
 }
