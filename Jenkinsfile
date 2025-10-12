@@ -3,8 +3,8 @@ pipeline {
 
   environment {
     DOCKER_IMAGE = "gaga730/student-course-registration:latest"
-    KUBE_DEPLOY_YAML = "gagana-deployment.yaml"
-    KUBE_SERVICE_YAML = "student-course-registration-service.yaml"
+    DOCKER_USER = "gaga730"
+    DOCKER_PASS = "gagana2005"
   }
 
   stages {
@@ -16,28 +16,18 @@ pipeline {
 
     stage('Push Docker Image') {
       steps {
-        withCredentials([usernamePassword(credentialsId: 'gaga730', usernameVariable: 'gaga730', passwordVariable: 'gagana2005')]) {
-          bat "docker login -u %DOCKER_USER% -p %DOCKER_PASS%"
-          bat "docker push %DOCKER_IMAGE%"
-        }
-      }
-    }
-
-    stage('Deploy to Kubernetes') {
-      steps {
-        bat "kubectl apply -f %KUBE_DEPLOY_YAML%"
-        bat "kubectl apply -f %KUBE_SERVICE_YAML%"
-        bat "kubectl rollout status deployment/student-course-registration-deployment"
+        bat "echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin"
+        bat "docker push %DOCKER_IMAGE%"
       }
     }
   }
 
   post {
     success {
-      echo 'Pipeline completed successfully!'
+      echo ' Docker image built and pushed successfully!'
     }
     failure {
-      echo 'Pipeline failed. Check logs for details.'
+      echo ' Pipeline failed. Check logs for details.'
     }
   }
 }
