@@ -4,7 +4,6 @@ pipeline {
     environment {
         DOCKER_IMAGE = "gaga730/student-course-registration"
         DOCKER_TAG = "latest"
-        DOCKER_USER = "gaga730"
     }
 
     stages {
@@ -23,11 +22,10 @@ pipeline {
         stage('Push to Docker Hub') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'gaga730', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-    bat '''
-        echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
-        docker push %DOCKER_IMAGE%:%DOCKER_TAG%
-    '''
-}
+                    bat '''
+                        echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
+                        docker push %DOCKER_IMAGE%:%DOCKER_TAG%
+                    '''
                 }
             }
         }
@@ -41,7 +39,7 @@ pipeline {
 
     post {
         success {
-            echo 'Pipeline completed successfully!'
+            echo ' Pipeline completed successfully!'
         }
         failure {
             echo ' Pipeline failed. Check logs for details.'
