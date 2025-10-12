@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: student-registration-deployment
+  name: student-course-registration-deployment
   labels:
-    app: student-registration
+    app: student-course-registrartion
 spec:
   replicas: 2   # Number of Pods (containers) to run
   selector:
@@ -12,11 +12,11 @@ spec:
   template:
     metadata:
       labels:
-        app: student-registration
+        app: student-course-registration
     spec:
       containers:
-        - name: student-registration
-          image: your-dockerhub-username/student-registration:latest   # <-- Replace this
+        - name: student-course-registration
+          image: gaga70/student-registration:latest   # <-- Replace this
           ports:
             - containerPort: 5000
           env:
