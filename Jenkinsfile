@@ -22,11 +22,12 @@ pipeline {
 
         stage('Push to Docker Hub') {
             steps {
-                withCredentials([string(credentialsId: 'gaga730', variable: 'DOCKER_PASS')]) {
-                    bat '''
-                        echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
-                        docker push %DOCKER_IMAGE%:%DOCKER_TAG%
-                    '''
+                withCredentials([usernamePassword(credentialsId: 'gaga730', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+    bat '''
+        echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
+        docker push %DOCKER_IMAGE%:%DOCKER_TAG%
+    '''
+}
                 }
             }
         }
