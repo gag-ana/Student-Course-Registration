@@ -6,7 +6,7 @@ pipeline {
         DOCKER_TAG = "latest"
         DOCKER_USER = "gaga730"
     }
-
+-
     stages {
         stage('Checkout') {
             steps {
