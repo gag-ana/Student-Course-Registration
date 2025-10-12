@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: student-course-registration-deployment
+  name: Student-Course-Registration-deployment
   labels:
-    app: student-course-registrartion
+    app: Student-Course-Registrartion
 spec:
   replicas: 2   # Number of Pods (containers) to run
   selector:
@@ -12,11 +12,11 @@ spec:
   template:
     metadata:
       labels:
-        app: student-course-registration
+        app: Student-Course-Registration
     spec:
       containers:
-        - name: student-course-registration
-          image: gaga70/student-registration:latest   # <-- Replace this
+        - name: Student-Course-Registration
+          image: gaga730/Student-Course-Registration:latest   # <-- Replace this
           ports:
             - containerPort: 5000
           env:

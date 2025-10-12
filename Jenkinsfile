@@ -1,48 +1,43 @@
 pipeline {
-    agent any
+  agent any
 
-    environment {
-        DOCKER_IMAGE = "gaga730/student-course-registration"
-        DOCKER_TAG = "latest"
+  environment {
+    DOCKER_IMAGE = "gaga730/student-course-registration:latest"
+    KUBE_DEPLOY_YAML = "gagana-deployment.yaml"
+    KUBE_SERVICE_YAML = "student-course-registration-service.yaml"
+  }
+
+  stages {
+    stage('Build Docker Image') {
+      steps {
+        bat "docker build -t %DOCKER_IMAGE% ."
+      }
     }
 
-    stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
+    stage('Push Docker Image') {
+      steps {
+        withCredentials([usernamePassword(credentialsId: 'docker-hub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+          bat "docker login -u %DOCKER_USER% -p %DOCKER_PASS%"
+          bat "docker push %DOCKER_IMAGE%"
         }
-
-        stage('Build Docker Image') {
-            steps {
-                bat "docker build -t %DOCKER_IMAGE%:%DOCKER_TAG% ."
-            }
-        }
-
-        stage('Push to Docker Hub') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'gaga730', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    bat '''
-                        echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
-                        docker push %DOCKER_IMAGE%:%DOCKER_TAG%
-                    '''
-                }
-            }
-        }
-
-        // stage('Deploy to Kubernetes') {
-        //     steps {
-        //         echo 'Kubernetes deployment will be added later.'
-        //     }
-        // }
+      }
     }
 
-    post {
-        success {
-            echo ' Pipeline completed successfully!'
-        }
-        failure {
-            echo ' Pipeline failed. Check logs for details.'
-        }
+    stage('Deploy to Kubernetes') {
+      steps {
+        bat "kubectl apply -f %KUBE_DEPLOY_YAML%"
+        bat "kubectl apply -f %KUBE_SERVICE_YAML%"
+        bat "kubectl rollout status deployment/student-course-registration-deployment"
+      }
     }
+  }
+
+  post {
+    success {
+      echo 'Pipeline completed successfully!'
+    }
+    failure {
+      echo 'Pipeline failed. Check logs for details.'
+    }
+  }
 }
