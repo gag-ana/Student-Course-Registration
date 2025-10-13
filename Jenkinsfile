@@ -5,7 +5,7 @@ pipeline {
     DOCKER_IMAGE = "gaga730/student-course-registration:latest"
     DOCKER_USER = "gaga730"
     DOCKER_PASS = "gagana2005"
-    KUBE_CONFIG = credentials('kubeconfig-cred-id') // Jenkins credential ID for kubeconfig
+    KUBE_CONFIG = credentials('kubeconfig-cred-gagana') // Jenkins credential ID for kubeconfig
   }
 
   stages {
@@ -24,7 +24,7 @@ pipeline {
 
     stage('Deploy to Kubernetes') {
       steps {
-        withCredentials([file(credentialsId: 'kubeconfig-cred-id', variable: 'KUBECONFIG')]) {
+        withCredentials([file(credentialsId: 'kubeconfig-cred-gagana', variable: 'KUBECONFIG')]) {
           bat "kubectl --kubeconfig=%KUBECONFIG% apply -f k8s/deployment.yaml"
           bat "kubectl --kubeconfig=%KUBECONFIG% apply -f k8s/service.yaml"
         }
