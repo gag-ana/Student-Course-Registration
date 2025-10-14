@@ -9,9 +9,9 @@ app.secret_key = "regilearn_secret_key"
 try:
     db = mysql.connector.connect(
         host="localhost",
-        user="student_admin",
-        password="student",
-        database="studentdb"
+        user="root",
+        password="2005",
+        database="student_db"
     )
     cursor = db.cursor(dictionary=True)
     print("✅ Connected to MySQL Database")
