@@ -5,6 +5,7 @@ pipeline {
     DOCKER_IMAGE = "gaga730/student-course-registration:latest"
     DOCKER_USER = "gaga730"
     DOCKER_PASS = "gagana2005"
+    KUBECONFIG = credentials('kubeconfig-cred-gagana') // Jenkins credential for kubeconfig
   }
 
   stages {
@@ -20,14 +21,28 @@ pipeline {
         bat "docker push %DOCKER_IMAGE%"
       }
     }
+
+    stage('Deploy to Kubernetes') {
+      steps {
+        bat "kubectl apply -f deployment.yaml"
+        bat "kubectl apply -f service.yaml"
+      }
+    }
+
+    stage('Verify Deployment') {
+      steps {
+        bat "kubectl get pods"
+        bat "kubectl get svc"
+      }
+    }
   }
 
   post {
     success {
-      echo ' Docker image built and pushed successfully!'
+      echo 'Docker image built, pushed, and deployed to Kubernetes successfully!'
     }
     failure {
-      echo ' Pipeline failed. Check logs for details.'
+      echo 'Pipeline failed. Check logs for details.'
     }
   }
 }
