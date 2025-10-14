@@ -95,6 +95,11 @@ def register():
 
     return render_template("register.html")
 
+# 📚 Courses
+@app.route("/courses")
+def courses():
+    return render_template("courses.html")
+
 # 🧪 Test
 @app.route("/test")
 def test():
