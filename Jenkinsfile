@@ -17,7 +17,7 @@ pipeline {
 
     stage('Push Docker Image') {
       steps {
-        bat "echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin"
+        bat "docker build --platform=linux/amd64 -t %DOCKER_IMAGE% ."
         bat "docker push %DOCKER_IMAGE%"
       }
     }
