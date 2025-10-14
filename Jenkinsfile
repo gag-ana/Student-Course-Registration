@@ -1,48 +1,49 @@
 pipeline {
-  agent any
+    agent any
 
-  environment {
-    DOCKER_IMAGE = "gaga730/student-course-registration:latest"
-    DOCKER_USER = "gaga730"
-    DOCKER_PASS = "gagana2005"
-    KUBECONFIG = credentials('kubeconfig-cred-gagana') // Jenkins credential for kubeconfig
-  }
+    environment {
+        DOCKER_IMAGE = "gaga730/student-course-registration:latest"
+        DOCKER_USER = "gaga730"
+        DOCKER_PASS = "gagana2005"
 
-  stages {
-    stage('Build Docker Image') {
-      steps {
-        bat "docker build -t %DOCKER_IMAGE% ."
-      }
+        // Path to your Minikube kubeconfig file
+        KUBECONFIG_PATH = "C:\\Users\\hello\\.kube\\config"
     }
 
-    stage('Push Docker Image') {
-      steps {
-        bat "docker build --platform=linux/amd64 -t %DOCKER_IMAGE% ."
-        bat "docker push %DOCKER_IMAGE%"
-      }
+    stages {
+        stage('Build Docker Image') {
+            steps {
+                bat "docker build -t %DOCKER_IMAGE% ."
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                bat '''
+                echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
+                docker push %DOCKER_IMAGE%
+                '''
+            }
+        }
+
+        stage('Deploy to Kubernetes (Minikube)') {
+            steps {
+                bat '''
+                set KUBECONFIG=%KUBECONFIG_PATH%
+                kubectl apply -f deployment.yaml
+                kubectl apply -f service.yaml
+                kubectl get pods -o wide
+                '''
+            }
+        }
     }
 
-    stage('Deploy to Kubernetes') {
-      steps {
-        bat "kubectl apply -f deployment.yaml"
-        bat "kubectl apply -f service.yaml"
-      }
+    post {
+        success {
+            echo ' Docker image built, pushed, and deployed to Minikube successfully!'
+        }
+        failure {
+            echo 'Pipeline failed. Check logs for details.'
+        }
     }
-
-    stage('Verify Deployment') {
-      steps {
-        bat "kubectl get pods"
-        bat "kubectl get svc"
-      }
-    }
-  }
-
-  post {
-    success {
-      echo 'Docker image built, pushed, and deployed to Kubernetes successfully!'
-    }
-    failure {
-      echo 'Pipeline failed. Check logs for details.'
-    }
-  }
 }
