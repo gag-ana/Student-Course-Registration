@@ -4,13 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Regilearn Engineering Subjects</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
       margin: 0;
-      padding: 0;
-      text-align: center;
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(to right, #e0f7fa, #f4f4f4);
       display: flex;
       flex-direction: column;
       min-height: 100vh;
@@ -20,6 +20,8 @@
       background-color: #0056b3;
       color: white;
       padding: 20px;
+      text-align: center;
+      position: relative;
     }
 
     header img {
@@ -37,26 +39,33 @@
       text-decoration: none;
       margin: 0 15px;
       font-weight: bold;
+      transition: color 0.3s;
     }
 
     nav a:hover {
-      text-decoration: underline;
+      color: #ffdd57;
     }
 
-    main {
-      flex: 1;
-      padding: 40px 20px;
+    .hero {
+      padding: 60px 20px;
+      text-align: center;
+      background: url('static/hero-bg.jpg') no-repeat center center/cover;
+      color: #fff;
     }
 
-    .quotes {
-      font-style: italic;
-      margin: 30px auto;
+    .hero h2 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+    }
+
+    .hero p {
+      font-size: 1.2em;
       max-width: 600px;
-      color: #333;
+      margin: auto;
     }
 
     .action-buttons {
-      margin: 20px 0;
+      margin: 30px 0;
     }
 
     .action-buttons a {
@@ -68,17 +77,42 @@
       text-decoration: none;
       border-radius: 5px;
       font-size: 16px;
+      transition: background-color 0.3s;
     }
 
     .action-buttons a:hover {
       background-color: #005fa3;
     }
 
+    .quotes {
+      font-style: italic;
+      margin: 40px auto;
+      max-width: 600px;
+      color: #333;
+      animation: fadeIn 3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     footer {
       background-color: #0056b3;
       color: white;
-      padding: 10px;
+      padding: 20px;
       text-align: center;
+    }
+
+    .social-icons a {
+      color: white;
+      margin: 0 10px;
+      font-size: 20px;
+      text-decoration: none;
+    }
+
+    .social-icons a:hover {
+      color: #ffdd57;
     }
   </style>
 </head>
@@ -90,26 +124,32 @@
       <a href="#">Register</a>
       <a href="#">Login</a>
       <a href="#">Courses</a>
-      <!-- <a href="#">Departments</a> -->
     </nav>
   </header>
 
-  <main>
-    <p>This is your first webpage!</p>
+  <section class="hero">
+    <h2>Empowering Engineers of Tomorrow</h2>
+    <p>Explore curated courses, connect with mentors, and build your future with Regilearn.</p>
+    <div class="action-buttons">
+      <a href="#"><i class="fas fa-user-plus"></i> Register</a>
+      <a href="#"><i class="fas fa-sign-in-alt"></i> Login</a>
+    </div>
+  </section>
 
+  <main>
     <div class="quotes">
       <p>"Education is the most powerful weapon which you can use to change the world."</p>
       <p>"The beautiful thing about learning is that no one can take it away from you."</p>
     </div>
-
-    <div class="action-buttons">
-      <a href="#">Register</a>
-      <a href="#">Login</a>
-    </div>
   </main>
 
   <footer>
-    &copy; 2025 Regilearn
+    &copy; 2025 Regilearn | Follow us:
+    <div class="social-icons">
+      <a href="#"><i class="fab fa-facebook-f"></i></a>
+      <a href="#"><i class="fab fa-twitter"></i></a>
+      <a href="#"><i class="fab fa-linkedin-in"></i></a>
+    </div>
   </footer>
 </body>
 </html>

@@ -14,9 +14,9 @@ try:
         database="student_db"
     )
     cursor = db.cursor(dictionary=True)
-    print("✅ Connected to MySQL Database")
+    print(" Connected to MySQL Database")
 except mysql.connector.Error as err:
-    print("❌ MySQL connection failed:", err)
+    print(" MySQL connection failed:", err)
     db = None
     cursor = None
 
