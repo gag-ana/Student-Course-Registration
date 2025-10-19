@@ -11,6 +11,33 @@ pipeline {
     }
 
     stages {
+        stage('Start Minikube') {
+            steps {
+                bat '''
+                echo Checking Minikube status...
+                minikube status
+                if %ERRORLEVEL% NEQ 0 (
+                    echo Starting Minikube...
+                    minikube start
+                ) else (
+                    echo Minikube is already running.
+                )
+
+                echo Waiting for Minikube to be ready...
+                for /l %%x in (1, 1, 30) do (
+                    kubectl get nodes >nul 2>&1
+                    if %ERRORLEVEL% EQU 0 (
+                        echo Minikube is ready.
+                        goto :done
+                    )
+                    echo Waiting... %%x
+                    timeout /t 5 >nul
+                )
+                :done
+                '''
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 bat "docker build -t %DOCKER_IMAGE% ."
@@ -40,7 +67,7 @@ pipeline {
 
     post {
         success {
-            echo ' Docker image built, pushed, and deployed to Minikube successfully!'
+            echo 'Docker image built, pushed, and deployed to Minikube successfully!'
         }
         failure {
             echo 'Pipeline failed. Check logs for details.'
