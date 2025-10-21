@@ -8,7 +8,7 @@ app.secret_key = "regilearn_secret_key"
 # ✅ MySQL connection
 try:
     db = mysql.connector.connect(
-        host="localhost",
+        host="mysql-service",
         user="root",
         password="2005",
         database="student_db"
