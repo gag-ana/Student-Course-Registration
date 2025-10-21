@@ -9,40 +9,52 @@ pipeline {
     }
 
     stages {
-        stage('Start Minikube') {
+
+        stage('Ensure Minikube is Running') {
             steps {
                 bat '''
-                echo Starting Minikube...
-                minikube start
+                echo Checking Minikube status...
 
-                echo Waiting for Minikube to be ready...
-                setlocal enabledelayedexpansion
-                set COUNT=1
+                REM Check if Minikube is running
+                minikube status >nul 2>&1
+                if %ERRORLEVEL% NEQ 0 (
+                    echo Minikube not running. Starting Minikube automatically...
+                    minikube start --driver=docker
 
-                :waitLoop
-                kubectl get nodes >nul 2>&1
-                if %ERRORLEVEL% EQU 0 (
-                    echo Minikube is ready.
-                    goto :done
+                    echo Waiting for Minikube to be ready...
+                    setlocal enabledelayedexpansion
+                    set COUNT=1
+                    :waitLoop
+                    kubectl get nodes >nul 2>&1
+                    if %ERRORLEVEL% EQU 0 (
+                        echo  Minikube is ready!
+                        goto :done
+                    )
+                    echo Waiting... !COUNT!
+                    set /a COUNT+=1
+                    if !COUNT! LEQ 30 (
+                        timeout /t 5 >nul
+                        goto :waitLoop
+                    )
+                    echo  ERROR: Minikube did not become ready in time.
+                    exit /b 1
+                    :done
+                ) else (
+                    echo  Minikube is already running.
                 )
-                echo Waiting... !COUNT!
-                set /a COUNT+=1
-                if !COUNT! LEQ 30 (
-                    timeout /t 5 >nul
-                    goto :waitLoop
-                )
-                echo ERROR: Minikube did not become ready in time.
-                exit /b 1
 
-                :done
-                echo Proceeding with pipeline...
+                echo Setting Docker environment to Minikube...
+                for /f "tokens=*" %%i in ('minikube -p minikube docker-env') do @%%i
                 '''
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                bat "docker build -t %DOCKER_IMAGE% ."
+                bat '''
+                for /f "tokens=*" %%i in ('minikube -p minikube docker-env') do @%%i
+                docker build -t %DOCKER_IMAGE% .
+                '''
             }
         }
 
@@ -55,7 +67,7 @@ pipeline {
             }
         }
 
-        stage('Deploy to Kubernetes (Minikube)') {
+        stage('Deploy to Kubernetes') {
             steps {
                 bat '''
                 set KUBECONFIG=%KUBECONFIG_PATH%
@@ -69,10 +81,10 @@ pipeline {
 
     post {
         success {
-            echo 'Docker image built, pushed, and deployed to Minikube successfully!'
+            echo ' Successfully built, pushed, and deployed to Minikube automatically!'
         }
         failure {
-            echo 'Pipeline failed. Check logs for details.'
+            echo ' Pipeline failed. Check logs for details.'
         }
     }
 }
