@@ -5,6 +5,9 @@ pipeline {
         DOCKER_IMAGE = "gaga730/student-course-registration:latest"
         DOCKER_USER = "gaga730"
         DOCKER_PASS = "gagana2005"
+
+        // Path to your Minikube kubeconfig file
+        KUBECONFIG_PATH = "C:\\Users\\hello\\.kube\\config"
     }
 
     stages {
@@ -23,9 +26,10 @@ pipeline {
             }
         }
 
-        stage('Deploy to Kubernetes') {
+        stage('Deploy to Kubernetes (Minikube)') {
             steps {
                 bat '''
+                set KUBECONFIG=%KUBECONFIG_PATH%
                 kubectl apply -f deployment.yaml
                 kubectl apply -f service.yaml
                 kubectl get pods -o wide
@@ -36,7 +40,7 @@ pipeline {
 
     post {
         success {
-            echo 'Docker image built, pushed, and deployed to Kubernetes successfully!'
+            echo ' Docker image built, pushed, and deployed to Minikube successfully!'
         }
         failure {
             echo 'Pipeline failed. Check logs for details.'
