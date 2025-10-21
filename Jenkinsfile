@@ -9,36 +9,7 @@ pipeline {
     stages {
         stage('Ensure Minikube is Running') {
             steps {
-                bat '''
-echo Checking Minikube status...
-minikube status >nul 2>&1
-if %ERRORLEVEL% NEQ 0 (
-    echo Minikube not running. Starting Minikube...
-    minikube start --driver=docker
-
-    echo Waiting for Minikube to be ready...
-    timeout /t 10 >nul
-    setlocal enabledelayedexpansion
-    set COUNT=1
-:waitLoop
-    kubectl get nodes >nul 2>&1
-    if %ERRORLEVEL% EQU 0 (
-        echo  Minikube is ready!
-        goto :done
-    )
-    echo Waiting... !COUNT!
-    set /a COUNT+=1
-    if !COUNT! LEQ 30 (
-        timeout /t 5 >nul
-        goto :waitLoop
-    )
-    echo  ERROR: Minikube did not become ready in time.
-    exit /b 1
-:done
-) else (
-    echo  Minikube is already running.
-)
-'''
+                bat 'scripts\\ensure_minikube.bat'
             }
         }
 
@@ -76,7 +47,7 @@ kubectl get pods -o wide
 
     post {
         success {
-            echo ' Successfully built, pushed, and deployed to Minikube automatically!'
+            echo 'Successfully built, pushed, and deployed to Minikube automatically!'
         }
         failure {
             echo ' Pipeline failed. Check logs for details.'
