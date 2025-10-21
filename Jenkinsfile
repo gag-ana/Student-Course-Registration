@@ -5,8 +5,6 @@ pipeline {
         DOCKER_IMAGE = "gaga730/student-course-registration:latest"
         DOCKER_USER = "gaga730"
         DOCKER_PASS = "gagana2005"
-
-        // Path to your Minikube kubeconfig file
         KUBECONFIG_PATH = "C:\\Users\\hello\\.kube\\config"
     }
 
@@ -14,19 +12,13 @@ pipeline {
         stage('Start Minikube') {
             steps {
                 bat '''
-                echo Checking Minikube status...
-                minikube status
-                if %ERRORLEVEL% NEQ 0 (
-                    echo Starting Minikube...
-                    minikube start
-                ) else (
-                    echo Minikube is already running.
-                )
+                echo Starting Minikube...
+                minikube start
 
                 echo Waiting for Minikube to be ready...
                 for /l %%x in (1, 1, 30) do (
                     kubectl get nodes >nul 2>&1
-                    if %ERRORLEVEL% EQU 0 (
+                    if %%ERRORLEVEL%% EQU 0 (
                         echo Minikube is ready.
                         goto :done
                     )
@@ -67,7 +59,7 @@ pipeline {
 
     post {
         success {
-            echo 'Docker image built, pushed, and deployed to Minikube successfully!'
+            echo ' Docker image built, pushed, and deployed to Minikube successfully!'
         }
         failure {
             echo 'Pipeline failed. Check logs for details.'
