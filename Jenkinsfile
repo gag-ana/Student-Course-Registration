@@ -5,6 +5,8 @@ pipeline {
         DOCKER_IMAGE = "gaga730/student-course-registration:latest"
         DOCKER_USER = "gaga730"
         DOCKER_PASS = "gagana2005"
+        // Optional: Set KUBECONFIG if needed for remote cluster access
+        // KUBECONFIG = "C:\\Users\\hello\\.kube\\config"
     }
 
     stages {
@@ -23,23 +25,6 @@ pipeline {
             }
         }
 
-        stage('Start Minikube (if needed)') {
-            steps {
-                bat '''
-                minikube status || minikube start --driver=docker
-                '''
-            }
-        }
-
-        stage('Configure Kubeconfig') {
-            steps {
-                bat '''
-                for /f "delims=" %%i in ('minikube kubeconfig') do set KUBECONFIG=%%i
-                echo Using KUBECONFIG=%KUBECONFIG%
-                '''
-            }
-        }
-
         stage('Deploy to Kubernetes') {
             steps {
                 bat '''
@@ -53,7 +38,7 @@ pipeline {
 
     post {
         success {
-            echo 'Docker image built, pushed, and deployed to Kubernetes via Minikube successfully!'
+            echo 'Docker image built, pushed, and deployed to Kubernetes successfully!'
         }
         failure {
             echo 'Pipeline failed. Check logs for details.'
