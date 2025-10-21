@@ -3,25 +3,21 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = "gaga730/student-course-registration:latest"
-        DOCKER_USER = "gaga730"
-        DOCKER_PASS = "gagana2005"
         KUBECONFIG_PATH = "C:\\Users\\hello\\.kube\\config"
     }
 
     stages {
-
         stage('Ensure Minikube is Running') {
             steps {
                 bat '''
 echo Checking Minikube status...
-
-REM Check if Minikube is running
 minikube status >nul 2>&1
 if %ERRORLEVEL% NEQ 0 (
-    echo Minikube not running. Starting Minikube automatically...
+    echo Minikube not running. Starting Minikube...
     minikube start --driver=docker
 
     echo Waiting for Minikube to be ready...
+    timeout /t 10 >nul
     setlocal enabledelayedexpansion
     set COUNT=1
 :waitLoop
@@ -40,11 +36,8 @@ if %ERRORLEVEL% NEQ 0 (
     exit /b 1
 :done
 ) else (
-    echo Minikube is already running.
+    echo  Minikube is already running.
 )
-
-echo Setting Docker environment to Minikube...
-for /f "tokens=*" %%i in ('minikube -p minikube docker-env') do @%%i
 '''
             }
         }
@@ -60,10 +53,12 @@ docker build -t %DOCKER_IMAGE% .
 
         stage('Push Docker Image') {
             steps {
-                bat '''
-echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
-docker push %DOCKER_IMAGE%
-'''
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-cred', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    bat '''
+                    echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
+                    docker push %DOCKER_IMAGE%
+                    '''
+                }
             }
         }
 
