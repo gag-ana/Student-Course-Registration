@@ -18,20 +18,4 @@ spec:
         - name: student-course-registration
           image: gaga730/student-course-registration:latest
           ports:
-            - containerPort: 8080
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: student-course-registration-service
-  labels:
-    app: student-course-registration
-spec:
-  selector:
-    app: student-course-registration
-  ports:
-    - protocol: TCP
-      port: 8080
-      targetPort: 8080
-  type: NodePort
+            - containerPort: 5000
