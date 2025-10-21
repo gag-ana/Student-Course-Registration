@@ -30,9 +30,11 @@ pipeline {
             steps {
                 bat '''
                 set KUBECONFIG=%KUBECONFIG_PATH%
+                kubectl apply -f mysql-deployment.yaml
                 kubectl apply -f deployment.yaml
                 kubectl apply -f service.yaml
                 kubectl get pods -o wide
+                kubectl get svc
                 '''
             }
         }
