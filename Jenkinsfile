@@ -5,8 +5,6 @@ pipeline {
         DOCKER_IMAGE = "gaga730/student-course-registration:latest"
         DOCKER_USER = "gaga730"
         DOCKER_PASS = "gagana2005"
-        // Optional: Set KUBECONFIG if needed for remote cluster access
-        // KUBECONFIG = "C:\\Users\\hello\\.kube\\config"
     }
 
     stages {
@@ -24,24 +22,14 @@ pipeline {
                 '''
             }
         }
-
-        stage('Deploy to Kubernetes') {
-            steps {
-                bat '''
-                kubectl apply -f deployment.yaml --validate=false
-                kubectl apply -f service.yaml --validate=false
-                kubectl get pods -o wide
-                '''
-            }
-        }
     }
 
     post {
         success {
-            echo 'Docker image built, pushed, and deployed to Kubernetes successfully!'
+            echo ' Docker image built and pushed successfully!'
         }
         failure {
-            echo 'Pipeline failed. Check logs for details.'
+            echo ' Pipeline failed. Check logs for details.'
         }
     }
 }
