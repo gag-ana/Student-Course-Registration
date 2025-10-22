@@ -33,6 +33,7 @@ pipeline {
                 kubectl apply -f mysql-deployment.yaml
                 kubectl apply -f deployment.yaml
                 kubectl apply -f service.yaml
+                kubectl apply -f mysql-service.yaml
                 kubectl get pods -o wide
                 kubectl get svc
                 '''
