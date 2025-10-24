@@ -3,28 +3,34 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Engineering Courses</title>
+  <title>Engineering Departments</title>
   <style>
     /* Same CSS as in index.html */
     body {
       font-family: Arial, sans-serif;
       background-color: #f4f4f4;
       color: #333;
-      margin: 20px;
+      margin: 0;
       padding: 0;
     }
 
     header, footer {
       background-color: #0056b3;
       color: white;
-      padding: 10px 20px;
+      padding: 15px 20px;
       text-align: center;
+    }
+
+    nav {
+      margin-top: 10px;
     }
 
     nav a {
       color: white;
       text-decoration: none;
-      margin: 0 10px;
+      margin: 0 15px;
+      font-weight: bold;
+      transition: 0.3s;
     }
 
     nav a:hover {
@@ -32,16 +38,22 @@
     }
 
     main {
-      padding: 20px;
+      padding: 30px;
+      text-align: center;
     }
 
     ul {
       list-style-type: none;
+      padding: 0;
     }
 
     li {
       margin-bottom: 10px;
       font-size: 18px;
+    }
+
+    footer {
+      margin-top: 40px;
     }
   </style>
 </head>
@@ -49,8 +61,10 @@
   <header>
     <h1>Engineering Departments</h1>
     <nav>
-      <a href="index.html">Home</a> |
-      <a href="courses.html">Courses</a>
+      <a href="{{ url_for('index') }}">Home</a>
+      <a href="{{ url_for('courses') }}">Courses</a>
+      <a href="{{ url_for('register') }}">Register</a>
+      <a href="{{ url_for('login') }}">Login</a>
     </nav>
   </header>
 
@@ -67,7 +81,7 @@
   </main>
 
   <footer>
-    &copy;  Regilearn
+    &copy; 2025 Regilearn
   </footer>
 </body>
 </html>
