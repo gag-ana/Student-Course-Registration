@@ -1,4 +1,4 @@
-tunnel: regilearn-tunnel
+tunnel: 2796561e-db08-4826-82ad-6ef6b737f5bf
 credentials-file: C:\Users\hello\.cloudflared\2796561e-db08-4826-82ad-6ef6b737f5bf.json
 
 ingress:
