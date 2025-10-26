@@ -1,9 +1,8 @@
 tunnel: 2796561e-db08-4826-82ad-6ef6b737f5bf
-credentials-file: C:\Users\hello\.cloudflared\2796561e-db08-4826-82ad-6ef6b737f5bf.json
 
 ingress:
-  - hostname: regilearn.online
-    service: http://student-app.default.svc.cluster.local:5000
   - hostname: www.regilearn.online
-    service: http://student-app.default.svc.cluster.local:5000
+    service: http://student-course-registration-deployment.default.svc.cluster.local:5000
+  - hostname: local.regilearn.online
+    service: http://192.168.49.2:32712
   - service: http_status:404
