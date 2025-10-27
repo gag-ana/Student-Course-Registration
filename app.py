@@ -22,10 +22,10 @@ except mysql.connector.Error as err:
     cursor = None
 
 
-# 🏠  aindex Page
-@app.route("/")
-def aindex():
-    return render_template("aindex.html")
+# 🏠  index Page
+@app.route("/index")
+def index():
+    return render_template("index.html")
 
 
 # 🔐 Login
