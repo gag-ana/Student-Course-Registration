@@ -6,7 +6,6 @@ pipeline {
         DOCKER_PASS = "gagana2005"
         IMAGE_NAME  = "student-course-registration"
         BUILD_TAG   = "${BUILD_NUMBER}"
-        KUBECONFIG_PATH = "C:\\Users\\hello\\.kube\\config"  // Will be replaced with AKS kubeconfig
         RESOURCE_GROUP = "Student-course-Registration-rg"
         CLUSTER_NAME = "student-course-registration-aks"
     }
@@ -34,6 +33,23 @@ pipeline {
             }
         }
 
+        stage('Login to Azure') {
+            steps {
+                withCredentials([
+                    string(credentialsId: 'AZURE_CLIENT_ID', variable: 'AZURE_CLIENT_ID'),
+                    string(credentialsId: 'AZURE_CLIENT_SECRET', variable: 'AZURE_CLIENT_SECRET'),
+                    string(credentialsId: 'AZURE_TENANT_ID', variable: 'AZURE_TENANT_ID'),
+                    string(credentialsId: 'AZURE_SUBSCRIPTION_ID', variable: 'AZURE_SUBSCRIPTION_ID')
+                ]) {
+                    bat """
+                    echo Logging into Azure...
+                    az login --service-principal -u %AZURE_CLIENT_ID% -p %AZURE_CLIENT_SECRET% --tenant %AZURE_TENANT_ID%
+                    az account set --subscription %AZURE_SUBSCRIPTION_ID%
+                    """
+                }
+            }
+        }
+
         stage('Connect to AKS') {
             steps {
                 bat """
@@ -46,22 +62,13 @@ pipeline {
         stage('Deploy to AKS') {
             steps {
                 bat """
-                echo Deploying to Azure AKS cluster...
-                set KUBECONFIG=%USERPROFILE%\\.kube\\config
-
-                REM Update image in deployment
-                kubectl set image deployment/student-course-registration-deployment student-course-registration=%DOCKER_USER%/%IMAGE_NAME%:%BUILD_TAG%
-
-                REM Apply database and app configurations
+                echo Deploying application to AKS...
                 kubectl apply -f mysql-deployment.yaml
                 kubectl apply -f mysql-service.yaml
                 kubectl apply -f deployment.yaml
                 kubectl apply -f service.yaml
 
-                REM Wait for rollout to complete
                 kubectl rollout status deployment/student-course-registration-deployment
-
-                REM Show pod and service status
                 kubectl get pods -o wide
                 kubectl get svc
                 """
@@ -74,7 +81,7 @@ pipeline {
             echo "CI/CD pipeline completed successfully! Your app is now live on Azure AKS."
         }
         failure {
-            echo "Pipeline failed. Check Jenkins logs for details."
+            echo " Pipeline failed. Check Jenkins logs for details."
         }
     }
 }
