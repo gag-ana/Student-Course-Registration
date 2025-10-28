@@ -5,11 +5,10 @@ metadata:
   labels:
     app: student-course-registration
 spec:
-  type: NodePort
+  type: LoadBalancer
   selector:
     app: student-course-registration
   ports:
     - protocol: TCP
       port: 5000
       targetPort: 5000
-      nodePort: 31865  # You can change this if needed
