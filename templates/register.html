@@ -13,7 +13,7 @@
     }
 
     header, footer {
-      background-color: #0056b3;
+      background-color: #002855;
       color: white;
       text-align: center;
       padding: 15px;
@@ -34,7 +34,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 80vh;
+      padding: 40px 0;
     }
 
     .register-box {
@@ -42,19 +42,15 @@
       padding: 30px;
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      width: 300px;
-      height: 300px;
+      width: 320px;
       box-sizing: border-box;
-      overflow-y: auto;
       display: flex;
       flex-direction: column;
-      justify-content: flex-start;
-      align-items: stretch;
     }
 
     .register-box h2 {
       margin-bottom: 10px;
-      color: #0056b3;
+      color: #002855;
       text-align: center;
     }
 
@@ -67,7 +63,7 @@
     .register-box select {
       width: 100%;
       padding: 8px;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       border: 1px solid #ccc;
       border-radius: 4px;
     }
@@ -75,7 +71,7 @@
     .register-box button {
       width: 100%;
       padding: 10px;
-      background-color: #0077cc;
+      background-color: #002855;
       color: white;
       border: none;
       border-radius: 4px;
@@ -84,21 +80,21 @@
     }
 
     .register-box button:hover {
-      background-color: #005fa3;
+      background-color: #001f3f;
     }
 
-    .register-box .login-link {
+    .login-link {
       margin-top: auto;
       text-align: center;
       font-size: 14px;
     }
 
-    .register-box .login-link a {
-      color: #0077cc;
+    .login-link a {
+      color: #002855;
       text-decoration: none;
     }
 
-    .register-box .login-link a:hover {
+    .login-link a:hover {
       text-decoration: underline;
     }
   </style>
@@ -109,8 +105,8 @@
     <nav>
       <a href="{{ url_for('index') }}">Home</a>
       <a href="{{ url_for('courses') }}">Courses</a>
-   <a href="{{ url_for('departments') }}">Departments</a>
-    <a href="{{ url_for('login') }}">Login</a>
+      <a href="{{ url_for('departments') }}">Departments</a>
+      <a href="{{ url_for('login') }}">Login</a>
     </nav>
   </header>
 
@@ -118,7 +114,7 @@
     <div class="register-box">
       <h2>Create Your Account</h2>
       <form action="/register" method="POST">
-        <label for="name">Full Name:</label>
+        <label for="name">Name:</label>
         <input type="text" id="name" name="name" required />
 
         <label for="email">Email:</label>
@@ -128,7 +124,7 @@
         <input type="password" id="password" name="password" required />
 
         <label for="department">Department:</label>
-        <select id="department" name="department" required>
+        <select id="department" name="department" required onchange="filterCourses()">
           <option value="">-- Select Department --</option>
           <option value="ISE">Information Science Engineering</option>
           <option value="CSE">Computer Science Engineering</option>
@@ -139,10 +135,15 @@
           <option value="CV">Civil Engineering</option>
         </select>
 
+        <label for="course">Course:</label>
+        <select id="course" name="course" required>
+          <option value="">-- Select Course --</option>
+        </select>
+
         <button type="submit">Register</button>
       </form>
       <div class="login-link">
-        <p>Already have an account? <a href="login.html">Login here</a></p>
+        <p>Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
       </div>
     </div>
   </main>
@@ -150,5 +151,53 @@
   <footer>
     &copy; 2025 Regilearn
   </footer>
+
+  <script>
+    const courseOptions = {
+      ISE: [
+        "Introduction to Cloud Computing (ISE101)",
+        "Blockchain Developer (ISE102)"
+      ],
+      CSE: [
+        "Introduction to Python Tools (CSE101)",
+        "Fullstack Development (CSE102)"
+      ],
+      ECE: [
+        "Fundamentals of Digital Circuits and Systems (ECE101)",
+        "Introduction to C and Assembly Language Programming (ECE102)"
+      ],
+      EEE: [
+        "Electric Power Systems - Single and 3-phase Systems (EEE101)",
+        "Electrical Engineering Theory (EEE102)"
+      ],
+      AIML: [
+        "General AI for Beginners (AIML101)",
+        "General AI for Data Analysts (AIML102)"
+      ],
+      ME: [
+        "Internal Combustion Engine Theory (ME101)",
+        "Introduction to Mechanical Measuring Systems (ME102)"
+      ],
+      CV: [
+        "Basics of Concrete Testing (CV101)",
+        "LEED V4: Building Design and Construction (CV102)"
+      ]
+    };
+
+    function filterCourses() {
+      const dept = document.getElementById("department").value;
+      const courseSelect = document.getElementById("course");
+      courseSelect.innerHTML = '<option value="">-- Select Course --</option>';
+
+      if (courseOptions[dept]) {
+        courseOptions[dept].forEach(course => {
+          const option = document.createElement("option");
+          option.value = course;
+          option.textContent = course;
+          courseSelect.appendChild(option);
+        });
+      }
+    }
+  </script>
 </body>
-</html>
+</html> register.html

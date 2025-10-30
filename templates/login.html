@@ -13,7 +13,7 @@
     }
 
     header, footer {
-      background-color: #0056b3;
+      background-color: #002855;
       color: white;
       text-align: center;
       padding: 15px;
@@ -49,8 +49,9 @@
 
     .login-box h2 {
       margin-bottom: 15px;
-      color: #0056b3;
+      color: #002855;
       font-size: 20px;
+      text-align: center;
     }
 
     .login-box label {
@@ -72,7 +73,7 @@
     .login-box button {
       width: 100%;
       padding: 8px;
-      background-color: #0077cc;
+      background-color: #002855; /* Dark blue button */
       color: white;
       border: none;
       border-radius: 4px;
@@ -81,21 +82,21 @@
     }
 
     .login-box button:hover {
-      background-color: #005fa3;
+      background-color: #001f3f;
     }
 
-    .login-box .register-link {
+    .register-link {
       margin-top: 10px;
       text-align: center;
       font-size: 13px;
     }
 
-    .login-box .register-link a {
+    .register-link a {
       color: #0077cc;
       text-decoration: none;
     }
 
-    .login-box .register-link a:hover {
+    .register-link a:hover {
       text-decoration: underline;
     }
   </style>
@@ -105,9 +106,9 @@
     <h1>Regilearn Login</h1>
     <nav>
       <a href="{{ url_for('index') }}">Home</a>
-<a href="{{ url_for('courses') }}">Courses</a>
-<a href="{{ url_for('departments') }}">Departments</a>
-<a href="{{ url_for('register') }}">Register</a>
+      <a href="{{ url_for('courses') }}">Courses</a>
+      <a href="{{ url_for('departments') }}">Departments</a>
+      <a href="{{ url_for('register') }}">Register</a>
     </nav>
   </header>
 
@@ -124,13 +125,12 @@
         <button type="submit">Login</button>
       </form>
       <div class="register-link">
-        <p>Don't have an account? <a href="register.html">Register here</a></p>
+        <p>Don't have an account? <a href="{{ url_for('register') }}">Register</a></p>
       </div>
     </div>
   </main>
 
-  <footer>
-    &copy; 2025 Regilearn
+
   </footer>
 </body>
 </html>

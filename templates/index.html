@@ -9,13 +9,13 @@
     body {
       margin: 0;
       font-family: 'Roboto', sans-serif;
-      background-color: #f9f9f9;
-      color: #333;
+      color: #f2eded;
+      background: url("{{ url_for('static', filename='images/regilearn-logo.png') }}") no-repeat center center fixed;
+      background-size: cover;
     }
 
-    header, footer {
-      background-color: #0056b3;
-      color: white;
+    header, footer, .hero {
+      background-color: transparent;
       text-align: center;
       padding: 20px;
     }
@@ -30,7 +30,7 @@
     }
 
     nav a {
-      color: white;
+      color: #eae8e8;
       text-decoration: none;
       margin: 0 15px;
       font-weight: bold;
@@ -40,19 +40,13 @@
     }
 
     nav a:hover {
-      background-color: #003d80;
+      background-color: rgba(255, 255, 255, 0.3);
       text-decoration: none;
-    }
-
-    .hero {
-      padding: 60px 20px;
-      text-align: center;
-      background: linear-gradient(to right, #e0f7fa, #f4f4f4);
     }
 
     .hero h2 {
       font-size: 2.5em;
-      color: #0056b3;
+      color: #ede6e6;
     }
 
     .hero p {
@@ -62,13 +56,15 @@
     }
 
     footer {
-      margin-top: 40px;
+      margin-top: 0;
+      font-size: 14px;
     }
   </style>
 </head>
 <body>
   <header>
-    <img src="{{ url_for('static', filename='images/regilearn-logo.png') }}" alt="Regilearn Logo" class="logo">
+    
+
     <h1>Regilearn</h1>
     <nav>
       <a href="{{ url_for('index') }}">Home</a>
@@ -76,16 +72,15 @@
       <a href="{{ url_for('courses') }}">Courses</a>
       <a href="{{ url_for('departments') }}">Departments</a>
       <a href="{{ url_for('login') }}">Login</a>
+
     </nav>
   </header>
 
   <section class="hero">
-    <h2>Empowering Engineers of Tomorrow</h2>
-    <p>Explore curated courses, connect with mentors, and build your future with Regilearn.</p>
+    <h2>Welcome to Regilearn</h2>
   </section>
 
-  <footer>
-    &copy; 2025 Regilearn
+  
   </footer>
 </body>
 </html>
