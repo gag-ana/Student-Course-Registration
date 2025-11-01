@@ -11,7 +11,7 @@ pipeline {
         // Azure Service Principal credentials (updated)
         CLIENT_ID       = "9e8acdf7-5a12-4c61-972d-c64337eeca21"
         CLIENT_SECRET   = "4zt8Q~q7yB0pd~e4_2VTXSzEpInu5mrmj~zhDdnx"
-        TENANT_ID       = "7b887c76-d8d8-4448-9bf5-a5120345eb4"
+        TENANT_ID       = "7b887c76-d8d8-4448-9bf5-a51820345eb4"
         SUBSCRIPTION_ID = "58a5204f-816d-43a8-9730-a61ebdc3fadd"
 
         // AKS details (as shown in Azure portal)
