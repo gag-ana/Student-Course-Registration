@@ -5,8 +5,9 @@ pipeline {
         DOCKER_USER = "gaga730"
         DOCKER_PASS = "gagana2005"
         IMAGE_NAME  = "student-course-registration"
-        BUILD_TAG   = "${BUILD_NUMBER}"   // Jenkins build number (unique version)
-        KUBECONFIG_PATH = "C:\\Users\\hello\\.kube\\config"  // Path to your local kubeconfig
+        BUILD_TAG   = "${BUILD_NUMBER}"
+        RESOURCE_GROUP = "Student-course-Registration-rg"
+        CLUSTER_NAME = "student-course-registration-aks"
     }
 
     stages {
@@ -32,25 +33,42 @@ pipeline {
             }
         }
 
-        stage('Deploy to Local Kubernetes') {
+        stage('Login to Azure') {
+            steps {
+                withCredentials([
+                    string(credentialsId: 'AZURE_CLIENT_ID', variable: 'AZURE_CLIENT_ID'),
+                    string(credentialsId: 'AZURE_CLIENT_SECRET', variable: 'AZURE_CLIENT_SECRET'),
+                    string(credentialsId: 'AZURE_TENANT_ID', variable: 'AZURE_TENANT_ID'),
+                    string(credentialsId: 'AZURE_SUBSCRIPTION_ID', variable: 'AZURE_SUBSCRIPTION_ID')
+                ]) {
+                    bat """
+                    echo Logging into Azure...
+                    az login --service-principal -u %AZURE_CLIENT_ID% -p %AZURE_CLIENT_SECRET% --tenant %AZURE_TENANT_ID%
+                    az account set --subscription %AZURE_SUBSCRIPTION_ID%
+                    """
+                }
+            }
+        }
+
+        stage('Connect to AKS') {
             steps {
                 bat """
-                echo Deploying to Kubernetes cluster...
-                set KUBECONFIG=%KUBECONFIG_PATH%
+                echo Fetching AKS credentials...
+                az aks get-credentials --resource-group %RESOURCE_GROUP% --name %CLUSTER_NAME% --overwrite-existing
+                """
+            }
+        }
 
-                REM  Update image in deployment (forces rolling update)
-                kubectl set image deployment/student-course-registration-deployment student-course-registration=%DOCKER_USER%/%IMAGE_NAME%:%BUILD_TAG%
-
-                REM  Ensure MySQL and services are running
+        stage('Deploy to AKS') {
+            steps {
+                bat """
+                echo Deploying application to AKS...
                 kubectl apply -f mysql-deployment.yaml
                 kubectl apply -f mysql-service.yaml
                 kubectl apply -f deployment.yaml
                 kubectl apply -f service.yaml
 
-                REM  Wait for rollout to finish
                 kubectl rollout status deployment/student-course-registration-deployment
-
-                REM  Show current pod & service status
                 kubectl get pods -o wide
                 kubectl get svc
                 """
@@ -60,11 +78,10 @@ pipeline {
 
     post {
         success {
-            echo "CI/CD pipeline completed successfully!"
-            echo "Your website will be available through your NodePort + Cloudflare domain."
+            echo "CI/CD pipeline completed successfully! Your app is now live on Azure AKS."
         }
         failure {
-            echo "Pipeline failed. Please check Jenkins logs for details."
+            echo " Pipeline failed. Check Jenkins logs for details."
         }
     }
 }
