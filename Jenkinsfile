@@ -2,19 +2,21 @@ pipeline {
     agent any
 
     environment {
+        // DockerHub credentials
         DOCKER_USER = "gaga730"
         DOCKER_PASS = "gagana2005"
         IMAGE_NAME  = "student-course-registration"
         BUILD_TAG   = "${BUILD_NUMBER}"
 
-        // Azure credentials
-        CLIENT_ID       = "ab3b9833-48e2-4a0b-a1f3-0914de8689f5"
-        CLIENT_SECRET   = "NGJ8Q~uuh1frEWVSrne4fhm1_5v1lkXicR16aT6"
-        TENANT_ID       = "7b887c76-d8d8-4448-9bf5-a51820345eb4"
+        // Azure Service Principal credentials (updated)
+        CLIENT_ID       = "9e8acdf7-5a12-4c61-972d-c64337eeca21"
+        CLIENT_SECRET   = "4zt8Q~q7yB0pd~e4_2VTXSzEpInu5mrmj~zhDdnx"
+        TENANT_ID       = "7b887c76-d8d8-4448-9bf5-a5120345eb4"
         SUBSCRIPTION_ID = "58a5204f-816d-43a8-9730-a61ebdc3fadd"
 
-        RESOURCE_GROUP  = "student-rg"
-        CLUSTER_NAME    = "student-aks"
+        // AKS details (as shown in Azure portal)
+        RESOURCE_GROUP  = "Student-course-Registration-rg"
+        CLUSTER_NAME    = "student-course-registration-aks"
     }
 
     stages {
@@ -53,7 +55,7 @@ pipeline {
             steps {
                 bat """
                 echo Fetching AKS credentials...
-                az aks get-credentials --resource-group %RESOURCE_GROUP% --name %CLUSTER_NAME% --overwrite-existing
+                az aks get-credentials --resource-group "%RESOURCE_GROUP%" --name "%CLUSTER_NAME%" --overwrite-existing
                 """
             }
         }
@@ -67,6 +69,7 @@ pipeline {
                 kubectl apply -f deployment.yaml
                 kubectl apply -f service.yaml
 
+                echo Checking deployment status...
                 kubectl rollout status deployment/student-course-registration-deployment
                 kubectl get pods -o wide
                 kubectl get svc
