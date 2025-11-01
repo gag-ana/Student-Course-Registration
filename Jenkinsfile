@@ -2,9 +2,19 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME      = "student-course-registration"
-        RESOURCE_GROUP  = "Student-course-Registration-rg"
-        CLUSTER_NAME    = "student-course-registration-aks"
+        DOCKER_USER = "gaga730"
+        DOCKER_PASS = "gagana2005"
+        IMAGE_NAME  = "student-course-registration"
+        BUILD_TAG   = "${BUILD_NUMBER}"
+
+        // Azure credentials
+        CLIENT_ID       = "ab3b9833-48e2-4a0b-a1f3-0914de8689f5"
+        CLIENT_SECRET   = "NGJ8Q~uuh1frEWVSrne4fhm1_5v1lkXicR16aT6"
+        TENANT_ID       = "7b887c76-d8d8-4448-9bf5-a51820345eb4"
+        SUBSCRIPTION_ID = "58a5204f-816d-43a8-9730-a61ebdc3fadd"
+
+        RESOURCE_GROUP  = "student-rg"
+        CLUSTER_NAME    = "student-aks"
     }
 
     stages {
@@ -12,39 +22,30 @@ pipeline {
             steps {
                 bat """
                 echo Building Docker image...
-                docker build -t gaga730/%IMAGE_NAME%:$BUILD_NUMBER .
-                docker tag gaga730/%IMAGE_NAME%:$BUILD_NUMBER gaga730/%IMAGE_NAME%:latest
+                docker build -t %DOCKER_USER%/%IMAGE_NAME%:%BUILD_TAG% .
+                docker tag %DOCKER_USER%/%IMAGE_NAME%:%BUILD_TAG% %DOCKER_USER%/%IMAGE_NAME%:latest
                 """
             }
         }
 
         stage('Push Docker Image') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'DOCKER_HUB_CREDS', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    bat """
-                    echo Logging into Docker Hub...
-                    echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-                    docker push $DOCKER_USER/%IMAGE_NAME%:$BUILD_NUMBER
-                    docker push $DOCKER_USER/%IMAGE_NAME%:latest
-                    """
-                }
+                bat """
+                echo Pushing image to Docker Hub...
+                echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
+                docker push %DOCKER_USER%/%IMAGE_NAME%:%BUILD_TAG%
+                docker push %DOCKER_USER%/%IMAGE_NAME%:latest
+                """
             }
         }
 
         stage('Login to Azure') {
             steps {
-                withCredentials([
-                    string(credentialsId: 'AZURE_CLIENT_ID', variable: 'AZURE_CLIENT_ID'),
-                    string(credentialsId: 'AZURE_CLIENT_SECRET', variable: 'AZURE_CLIENT_SECRET'),
-                    string(credentialsId: 'AZURE_TENANT_ID', variable: 'AZURE_TENANT_ID'),
-                    string(credentialsId: 'AZURE_SUBSCRIPTION_ID', variable: 'AZURE_SUBSCRIPTION_ID')
-                ]) {
-                    bat """
-                    echo Logging into Azure...
-                    az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID
-                    az account set --subscription $AZURE_SUBSCRIPTION_ID
-                    """
-                }
+                bat """
+                echo Logging into Azure...
+                az login --service-principal -u %CLIENT_ID% -p %CLIENT_SECRET% --tenant %TENANT_ID%
+                az account set --subscription %SUBSCRIPTION_ID%
+                """
             }
         }
 
@@ -52,7 +53,7 @@ pipeline {
             steps {
                 bat """
                 echo Fetching AKS credentials...
-                az aks get-credentials --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --overwrite-existing
+                az aks get-credentials --resource-group %RESOURCE_GROUP% --name %CLUSTER_NAME% --overwrite-existing
                 """
             }
         }
