@@ -8,8 +8,8 @@ pipeline {
         IMAGE_NAME  = "student-course-registration"
         BUILD_TAG   = "${BUILD_NUMBER}"
 
-        // Azure configuration
-        CLIENT_ID       = "ab3b9833-48e2-4a0b-a1f3-0914de8689f5"  // From your jenkins-aks app registration
+        // Azure configuration (IDs are public-safe, secrets are stored securely)
+        CLIENT_ID       = "ab3b9833-48e2-4a0b-a1f3-0914de8689f5"
         TENANT_ID       = "7b887c76-d8d8-4448-9bf5-a51820345eb4"
         SUBSCRIPTION_ID = "58a5204f-816d-43a8-9730-a61ebdc3fadd"
 
@@ -42,10 +42,14 @@ pipeline {
 
         stage('Login to Azure') {
             steps {
-                withCredentials([string(credentialsId: 'AZURE_CLIENT_SECRET', variable: 'CLIENT_SECRET')]) {
+                withCredentials([string(credentialsId: 'AZ_CLIENT_SECRET', variable: 'CLIENT_SECRET')]) {
                     bat """
                     echo Logging into Azure...
-                    az login --service-principal -u %CLIENT_ID% -p %CLIENT_SECRET% --tenant %TENANT_ID%
+                    az login --service-principal ^
+                        -u %CLIENT_ID% ^
+                        -p %CLIENT_SECRET% ^
+                        --tenant %TENANT_ID%
+
                     az account set --subscription %SUBSCRIPTION_ID%
                     """
                 }
@@ -84,7 +88,7 @@ pipeline {
             echo " CI/CD pipeline completed successfully! Your app is now live on Azure AKS."
         }
         failure {
-            echo "Pipeline failed. Check Jenkins logs for details."
+            echo " Pipeline failed. Check Jenkins logs for details."
         }
     }
 }
