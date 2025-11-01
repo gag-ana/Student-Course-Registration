@@ -42,7 +42,7 @@ pipeline {
 
         stage('Login to Azure') {
             steps {
-                withCredentials([string(credentialsId: 'AZ_CLIENT_SECRET', variable: 'CLIENT_SECRET')]) {
+                withCredentials([string(credentialsId: 'AZ-CLIENT_SECRET', variable: 'CLIENT_SECRET')]) {
                     bat """
                     echo Logging into Azure...
                     az login --service-principal ^
