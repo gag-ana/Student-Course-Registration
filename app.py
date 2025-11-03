@@ -6,7 +6,7 @@ app = Flask(__name__)
 app.secret_key = "regilearn_secret_key"
 
 # --------------------------------------------------------
-#  MySQL Database Connection
+#  MySQL Database Connection 
 # --------------------------------------------------------
 try:
     db = mysql.connector.connect(
@@ -140,13 +140,6 @@ def logout():
 def courses():
     return render_template("courses.html")
 
-
-# --------------------------------------------------------
-#  Departments Page
-# --------------------------------------------------------
-@app.route("/departments")
-def departments():
-    return render_template("departments.html")
 
 
 # --------------------------------------------------------
