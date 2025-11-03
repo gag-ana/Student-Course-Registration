@@ -4,10 +4,11 @@ pipeline {
     environment {
         // DockerHub credentials
         DOCKER_USER = "gaga730"
+        DOCKER_PASS = "gagana2005"
         IMAGE_NAME  = "student-course-registration"
         BUILD_TAG   = "${BUILD_NUMBER}"
 
-        // Azure configuration
+        // Azure configuration (IDs are public-safe, secrets are stored securely)
         CLIENT_ID       = "ab3b9833-48e2-4a0b-a1f3-0914de8689f5"
         TENANT_ID       = "7b887c76-d8d8-4448-9bf5-a51820345eb4"
         SUBSCRIPTION_ID = "58a5204f-816d-43a8-9730-a61ebdc3fadd"
@@ -15,8 +16,6 @@ pipeline {
         // AKS details
         RESOURCE_GROUP  = "Student-course-Registration-rg"
         CLUSTER_NAME    = "student-course-registration-aks"
-        DEPLOYMENT_NAME = "student-course-registration"
-        CONTAINER_NAME  = "student-course-registration-container"
     }
 
     stages {
@@ -32,14 +31,12 @@ pipeline {
 
         stage('Push Docker Image') {
             steps {
-                withCredentials([string(credentialsId: 'DOCKER_PASSWORD', variable: 'DOCKER_PASS')]) {
-                    bat """
-                    echo Logging into Docker Hub...
-                    echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
-                    docker push %DOCKER_USER%/%IMAGE_NAME%:%BUILD_TAG%
-                    docker push %DOCKER_USER%/%IMAGE_NAME%:latest
-                    """
-                }
+                bat """
+                echo Pushing image to Docker Hub...
+                echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
+                docker push %DOCKER_USER%/%IMAGE_NAME%:%BUILD_TAG%
+                docker push %DOCKER_USER%/%IMAGE_NAME%:latest
+                """
             }
         }
 
@@ -68,12 +65,17 @@ pipeline {
             }
         }
 
-        stage('Update AKS Deployment') {
+        stage('Deploy to AKS') {
             steps {
                 bat """
-                echo Updating AKS deployment with new image...
-                kubectl set image deployment/%DEPLOYMENT_NAME% %CONTAINER_NAME%=%DOCKER_USER%/%IMAGE_NAME%:%BUILD_TAG%
-                kubectl rollout status deployment/%DEPLOYMENT_NAME%
+                echo Deploying application to AKS...
+                kubectl apply -f mysql-deployment.yaml
+                kubectl apply -f mysql-service.yaml
+                kubectl apply -f deployment.yaml
+                kubectl apply -f service.yaml
+
+                echo Checking deployment status...
+                kubectl rollout status deployment/student-course-registration-deployment
                 kubectl get pods -o wide
                 kubectl get svc
                 """
