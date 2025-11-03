@@ -1,6 +1,0 @@
-tunnel: 2796561e-db08-4826-82ad-6ef6b737f5bf
-
-ingress:
-  - hostname: www.regilearn.online
-    service: http://192.168.0.107:5000
-  - service: http_status:404
