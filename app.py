@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from werkzeug.security import generate_password_hash, check_password_hash
 import mysql.connector
+import requests
 
 app = Flask(__name__)
 app.secret_key = "regilearn_secret_key"
@@ -10,10 +11,10 @@ app.secret_key = "regilearn_secret_key"
 # --------------------------------------------------------
 try:
     db = mysql.connector.connect(
-        host="127.0.0.1",        # or MySQL service name if running in Kubernetes
-        user="root",             # MySQL username
-        password="2005",         # MySQL password
-        database="student_db",   # MySQL database name
+        host="127.0.0.1",
+        user="root",
+        password="2005",
+        database="student_db",
         port=3306
     )
     cursor = db.cursor(dictionary=True)
@@ -23,14 +24,12 @@ except mysql.connector.Error as err:
     db = None
     cursor = None
 
-
 # --------------------------------------------------------
 #  Index Page
 # --------------------------------------------------------
 @app.route("/")
 def index():
     return render_template("index.html")
-
 
 # --------------------------------------------------------
 #  Register Page
@@ -41,25 +40,21 @@ def register():
         name = request.form.get("name")
         email = request.form.get("email")
         department = request.form.get("department")
-        course = request.form.get("course")       #  Added
+        course = request.form.get("course")
         password = request.form.get("password")
 
-        # Validation
         if not name or not email or not department or not course or not password:
             return "All fields are required!"
 
         password_hash = generate_password_hash(password)
 
         try:
-            #  Updated SQL to include 'course'
             sql = """
                 INSERT INTO users (name, email, department, course, password_hash)
                 VALUES (%s, %s, %s, %s, %s)
             """
             cursor.execute(sql, (name, email, department, course, password_hash))
             db.commit()
-
-            #  Confirmation message includes course
             return f"""
             <h2>Registration Successful!</h2>
             <p><strong>Name:</strong> {name}</p>
@@ -74,7 +69,6 @@ def register():
             return "Error saving data."
 
     return render_template("register.html")
-
 
 # --------------------------------------------------------
 #  Login Page
@@ -106,9 +100,8 @@ def login():
 
     return render_template("login.html")
 
-
 # --------------------------------------------------------
-#  Dashboard (Shows Name, Department, and Course)
+#  Dashboard
 # --------------------------------------------------------
 @app.route("/dashboard")
 def dashboard():
@@ -123,7 +116,6 @@ def dashboard():
     else:
         return redirect(url_for("login"))
 
-
 # --------------------------------------------------------
 #  Logout
 # --------------------------------------------------------
@@ -132,15 +124,12 @@ def logout():
     session.pop("user", None)
     return redirect(url_for("login"))
 
-
 # --------------------------------------------------------
 #  Courses Page
 # --------------------------------------------------------
 @app.route("/courses")
 def courses():
     return render_template("courses.html")
-
-
 
 # --------------------------------------------------------
 #  Test Endpoint
@@ -149,6 +138,26 @@ def courses():
 def test():
     return "Flask is working fine!"
 
+# --------------------------------------------------------
+#  GitHub Webhook Endpoint
+# --------------------------------------------------------
+@app.route("/github-webhook/", methods=["POST"])
+def github_webhook():
+    payload = request.get_json()
+    print("Received GitHub webhook:", payload)
+
+    # Optional Jenkins trigger
+    jenkins_url = "http://<jenkins-host>:8080/job/<job-name>/build"
+    jenkins_user = "your-username"
+    jenkins_token = "your-api-token"
+
+    try:
+        response = requests.post(jenkins_url, auth=(jenkins_user, jenkins_token))
+        print("Jenkins response:", response.status_code)
+    except Exception as e:
+        print("Error triggering Jenkins:", e)
+
+    return '', 200
 
 # --------------------------------------------------------
 #  Run Flask Server
