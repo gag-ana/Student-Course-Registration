@@ -8,7 +8,7 @@ pipeline {
         IMAGE_NAME  = "student-course-registration"
         BUILD_TAG   = "${BUILD_NUMBER}"
 
-        // Azure configuration (IDs are public-safe, secrets are stored securely)
+        // Azure configuration
         CLIENT_ID       = "ab3b9833-48e2-4a0b-a1f3-0914de8689f5"
         TENANT_ID       = "7b887c76-d8d8-4448-9bf5-a51820345eb4"
         SUBSCRIPTION_ID = "58a5204f-816d-43a8-9730-a61ebdc3fadd"
@@ -81,14 +81,29 @@ pipeline {
                 """
             }
         }
+
+        stage('Deploy Jenkins to AKS') {
+            steps {
+                bat """
+                echo Deploying Jenkins to AKS...
+                kubectl apply -f jenkins-deployment.yaml
+                kubectl apply -f jenkins-service.yaml
+
+                echo Checking Jenkins deployment status...
+                kubectl rollout status deployment/jenkins-deployment
+                kubectl get pods -l app=jenkins
+                kubectl get svc jenkins-service
+                """
+            }
+        }
     }
 
     post {
         success {
-            echo " CI/CD pipeline completed successfully! Your app is now live on Azure AKS."
+            echo "CI/CD pipeline completed successfully! Your app and Jenkins are now live on Azure AKS."
         }
         failure {
-            echo " Pipeline failed. Check Jenkins logs for details."
+            echo "Pipeline failed. Check Jenkins logs for details."
         }
     }
 }
