@@ -18,11 +18,9 @@ try:
         port=3306
     )
     cursor = db.cursor(dictionary=True)
-    print(" Connected to MySQL Database")
+    print("✅ Connected to MySQL Database")
 except mysql.connector.Error as err:
-    print(" MySQL connection failed:", err)
-    db = None
-    cursor = None
+    raise RuntimeError(f"❌ MySQL connection failed: {err}")
 
 # --------------------------------------------------------
 #  Index Page
@@ -65,7 +63,7 @@ def register():
             <a href="/login">Login Now</a> | <a href="/">⬅ Back to Home</a>
             """
         except mysql.connector.Error as err:
-            print(" Error inserting data:", err)
+            print("❌ Error inserting data:", err)
             return "Error saving data."
 
     return render_template("register.html")
@@ -95,7 +93,7 @@ def login():
             else:
                 return "Invalid credentials."
         except mysql.connector.Error as err:
-            print(" Login error:", err)
+            print("❌ Login error:", err)
             return "Error during login."
 
     return render_template("login.html")
@@ -144,7 +142,7 @@ def test():
 @app.route("/github-webhook/", methods=["POST"])
 def github_webhook():
     payload = request.get_json()
-    print("Received GitHub webhook:", payload)
+    print("📦 Received GitHub webhook:", payload)
 
     # Optional Jenkins trigger
     jenkins_url = "http://<jenkins-host>:8080/job/<job-name>/build"
@@ -153,9 +151,9 @@ def github_webhook():
 
     try:
         response = requests.post(jenkins_url, auth=(jenkins_user, jenkins_token))
-        print("Jenkins response:", response.status_code)
+        print("🔁 Jenkins response:", response.status_code)
     except Exception as e:
-        print("Error triggering Jenkins:", e)
+        print("❌ Error triggering Jenkins:", e)
 
     return '', 200
 
