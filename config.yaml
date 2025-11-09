@@ -1,0 +1,7 @@
+tunnel: jenkins-tunnel
+credentials-file: C:\Users\hello\.cloudflared\e557dc87-6638-4dd5-b3dc-810f3dbf9d3c.json
+
+ingress:
+  - hostname: jenkins.regilearn.online
+    service: http://localhost:8080
+  - service: http_status:404
