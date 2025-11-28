@@ -71,14 +71,14 @@ pipeline {
                 bat """
                 echo Deploying application and Jenkins to AKS...
 
-                kubectl apply -f mysql-deployment.yaml
-                kubectl apply -f mysql-service.yaml
-                kubectl apply -f deployment.yaml
-                kubectl apply -f service.yaml
+                kubectl apply -f mysql-deployment.yml
+                kubectl apply -f mysql-service.yml
+                kubectl apply -f deployment.yml
+                kubectl apply -f service.yml
 
                 echo Deploying Jenkins...
-                kubectl apply -f jenkins-deployment.yaml
-                kubectl apply -f jenkins-service.yaml
+                kubectl apply -f jenkins-deployment.yml
+                kubectl apply -f jenkins-service.yml
 
                 echo Checking rollout status...
                 kubectl rollout status deployment/student-course-registration-deployment
