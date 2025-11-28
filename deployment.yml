@@ -20,13 +20,13 @@ spec:
           ports:
             - containerPort: 5000
           env:
-            - name: MYSQL_HOST
-              value: "mysql-service"   # 👈 match Service name
-            - name: MYSQL_PORT
+            - name: DB_HOST
+              value: "mysql-service"
+            - name: DB_PORT
               value: "3306"
-            - name: MYSQL_USER
+            - name: DB_USER
               value: "root"
-            - name: MYSQL_PASSWORD
+            - name: DB_PASSWORD
               value: "2005"
-            - name: MYSQL_DB
+            - name: DB_NAME
               value: "student_db"
