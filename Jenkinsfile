@@ -42,7 +42,7 @@ pipeline {
                     string(credentialsId: 'AZURE_APP_ID', variable: 'CLIENT_ID'),
                     string(credentialsId: 'AZURE_CLIENT_SECRET', variable: 'CLIENT_SECRET'),
                     string(credentialsId: 'AZURE_TENANT_ID', variable: 'TENANT_ID'),
-                    string(credentialsId: 'AZURE_SUBSCRIPTION_ID', variable: 'SUBSCRIPTION_ID')
+                    string(credentialsId: 'AZURE_SUBSCRPTION_ID', variable: 'SUBSCRIPTION_ID')
                 ]) {
                     bat """
                     echo Logging into Azure...
