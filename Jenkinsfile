@@ -4,7 +4,7 @@ pipeline {
     environment {
         // DockerHub
         DOCKER_USER = "gaga730"
-        DOCKER_PASS = credentials('gagana2005')
+        DOCKER_PASS = credentials("gagana2005")
         IMAGE_NAME  = "student-course-registration"
         BUILD_TAG   = "${BUILD_NUMBER}"
 
