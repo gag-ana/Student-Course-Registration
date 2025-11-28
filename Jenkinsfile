@@ -73,7 +73,7 @@ pipeline {
 
                 kubectl apply -f mysql-deployment.yml
                 kubectl apply -f mysql-service.yml
-                kubectl apply --f mysql-pvc.yml
+                kubectl apply -f mysql-pvc.yml
                 kubectl apply -f deployment.yml
                 kubectl apply -f service.yml
 
