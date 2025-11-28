@@ -4,13 +4,13 @@ pipeline {
     environment {
         // DockerHub
         DOCKER_USER = "gaga730"
-        DOCKER_PASS = credentials('docker-hub-password')
+        DOCKER_PASS = credentials('gagana2005')
         IMAGE_NAME  = "student-course-registration"
         BUILD_TAG   = "${BUILD_NUMBER}"
 
         // AKS
         RESOURCE_GROUP  = "student-rg"
-        CLUSTER_NAME    = "student-course-registration-aks"
+        CLUSTER_NAME    = "student-aks"
     }
 
     stages {
