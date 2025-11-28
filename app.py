@@ -1,26 +1,26 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from werkzeug.security import generate_password_hash, check_password_hash
 import mysql.connector
-import requests
+import os
 
 app = Flask(__name__)
-app.secret_key = "regilearn_secret_key"
+app.secret_key = os.getenv("FLASK_SECRET_KEY", "regilearn_secret_key")
 
 # --------------------------------------------------------
-#  MySQL Database Connection 
+#  MySQL Database Connection (use env vars for flexibility)
 # --------------------------------------------------------
 try:
     db = mysql.connector.connect(
-        host="127.0.0.1",
-        user="root",
-        password="2005",
-        database="student_db",
-        port=3306
+        host=os.getenv("MYSQL_HOST", "mysql-service"),   # Kubernetes service name
+        user=os.getenv("MYSQL_USER", "root"),
+        password=os.getenv("MYSQL_PASSWORD", "2005"),
+        database=os.getenv("MYSQL_DATABASE", "student_db"),
+        port=int(os.getenv("MYSQL_PORT", "3306"))
     )
     cursor = db.cursor(dictionary=True)
-    print(" Connected to MySQL Database")
+    print("✅ Connected to MySQL Database")
 except mysql.connector.Error as err:
-    raise RuntimeError(f" MySQL connection failed: {err}")
+    raise RuntimeError(f"❌ MySQL connection failed: {err}")
 
 # --------------------------------------------------------
 #  Index Page
@@ -41,7 +41,7 @@ def register():
         course = request.form.get("course")
         password = request.form.get("password")
 
-        if not name or not email or not department or not course or not password:
+        if not all([name, email, department, course, password]):
             return "All fields are required!"
 
         password_hash = generate_password_hash(password)
@@ -63,7 +63,7 @@ def register():
             <a href="/login">Login Now</a> | <a href="/">⬅ Back to Home</a>
             """
         except mysql.connector.Error as err:
-            print(" Error inserting data:", err)
+            print("❌ Error inserting data:", err)
             return "Error saving data."
 
     return render_template("register.html")
@@ -93,7 +93,7 @@ def login():
             else:
                 return "Invalid credentials."
         except mysql.connector.Error as err:
-            print(" Login error:", err)
+            print("❌ Login error:", err)
             return "Error during login."
 
     return render_template("login.html")
@@ -136,9 +136,8 @@ def courses():
 def test():
     return "Flask is working fine!"
 
-
 # --------------------------------------------------------
 #  Run Flask Server
 # --------------------------------------------------------
-if __name__ == "_main_":
+if __name__ == "__main__":   # ✅ fixed entrypoint
     app.run(host="0.0.0.0", port=5000, debug=True)
