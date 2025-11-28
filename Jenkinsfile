@@ -8,18 +8,13 @@ pipeline {
         IMAGE_NAME  = "student-course-registration"
         BUILD_TAG   = "${BUILD_NUMBER}"
 
-        // Azure (secured in Jenkins credentials store)
-        CLIENT_ID       = credentials('AZ-CLIENT_ID')
-        CLIENT_SECRET   = credentials('AZ-CLIENT_SECRET')
-        TENANT_ID       = credentials('AZ-TENANT_ID')
-        SUBSCRIPTION_ID = "58a5204f-816d-43a8-9730-a61ebdc3fadd"
-
         // AKS
-        RESOURCE_GROUP  = "student-rg"     // ✔ UPDATED
+        RESOURCE_GROUP  = "student-rg"
         CLUSTER_NAME    = "student-course-registration-aks"
     }
 
     stages {
+
         stage('Build Docker Image') {
             steps {
                 bat """
@@ -43,15 +38,17 @@ pipeline {
 
         stage('Azure Login') {
             steps {
-                bat """
-                echo Logging into Azure...
-                az login --service-principal ^
-                    -u %CLIENT_ID% ^
-                    -p %CLIENT_SECRET% ^
-                    --tenant %TENANT_ID%
+                withCredentials([azureServicePrincipal('azure-sp')]) {
+                    bat """
+                    echo Logging into Azure...
+                    az login --service-principal ^
+                        -u %CLIENT_ID% ^
+                        -p %CLIENT_SECRET% ^
+                        --tenant %TENANT_ID%
 
-                az account set --subscription %SUBSCRIPTION_ID%
-                """
+                    az account set --subscription %SUBSCRIPTION_ID%
+                    """
+                }
             }
         }
 
@@ -75,12 +72,13 @@ pipeline {
                 kubectl apply -f service.yaml
 
                 echo Deploying Jenkins...
-                kubectl apply -f jenkins-deployment.yaml   // ✔ NEW: Jenkins Deployment
-                kubectl apply -f jenkins-service.yaml      // ✔ NEW: Jenkins Service
+                kubectl apply -f jenkins-deployment.yaml
+                kubectl apply -f jenkins-service.yaml
 
                 echo Checking rollout status...
                 kubectl rollout status deployment/student-course-registration-deployment
-                kubectl rollout status deployment/jenkins-deployment  // ✔ NEW: Jenkins Deployment Rollout
+                kubectl rollout status deployment/jenkins-deployment
+                
                 kubectl get pods -o wide
                 kubectl get svc
                 """
