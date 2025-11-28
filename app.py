@@ -6,12 +6,9 @@ import requests
 app = Flask(__name__)
 app.secret_key = "regilearn_secret_key"
 
-# --------------------------------------------------------
-#  MySQL Database Connection 
-# --------------------------------------------------------
 try:
     db = mysql.connector.connect(
-        host="127.0.0.1",
+        host="mysql-service",
         user="root",
         password="2005",
         database="student_db",
@@ -22,16 +19,11 @@ try:
 except mysql.connector.Error as err:
     raise RuntimeError(f"MySQL connection failed: {err}")
 
-# --------------------------------------------------------
-#  Index Page
-# --------------------------------------------------------
+
 @app.route("/")
 def index():
     return render_template("index.html")
 
-# --------------------------------------------------------
-#  Register Page
-# --------------------------------------------------------
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
@@ -68,9 +60,7 @@ def register():
 
     return render_template("register.html")
 
-# --------------------------------------------------------
-#  Login Page
-# --------------------------------------------------------
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -98,9 +88,7 @@ def login():
 
     return render_template("login.html")
 
-# --------------------------------------------------------
-#  Dashboard
-# --------------------------------------------------------
+
 @app.route("/dashboard")
 def dashboard():
     if "user" in session:
@@ -114,30 +102,19 @@ def dashboard():
     else:
         return redirect(url_for("login"))
 
-# --------------------------------------------------------
-#  Logout
-# --------------------------------------------------------
+
 @app.route("/logout")
 def logout():
     session.pop("user", None)
     return redirect(url_for("login"))
 
-# --------------------------------------------------------
-#  Courses Page
-# --------------------------------------------------------
 @app.route("/courses")
 def courses():
     return render_template("courses.html")
 
-# --------------------------------------------------------
-#  Test Endpoint
-# --------------------------------------------------------
 @app.route("/test")
 def test():
     return "Flask is working fine!"
 
-# --------------------------------------------------------
-#  Run Flask Server
-# --------------------------------------------------------
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
