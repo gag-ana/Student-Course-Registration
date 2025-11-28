@@ -19,14 +19,3 @@ spec:
           image: gaga730/student-course-registration:latest
           ports:
             - containerPort: 5000
-          env:
-            - name: DB_HOST
-              value: "mysql-service"
-            - name: DB_PORT
-              value: "3306"
-            - name: DB_USER
-              value: "root"
-            - name: DB_PASSWORD
-              value: "2005"
-            - name: DB_NAME
-              value: "student_db"
