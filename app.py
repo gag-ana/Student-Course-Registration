@@ -2,25 +2,26 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from werkzeug.security import generate_password_hash, check_password_hash
 import mysql.connector
 import requests
+import os   # ✅ added for environment variables
 
-app = Flask(__name__)
+app = Flask(_name_)
 app.secret_key = "regilearn_secret_key"
 
 # --------------------------------------------------------
-#  MySQL Database Connection 
+#  MySQL Database Connection (Kubernetes-Friendly)
 # --------------------------------------------------------
 try:
     db = mysql.connector.connect(
-        host="127.0.0.1",
-        user="root",
-        password="2005",
-        database="student_db",
-        port=3306
+        host=os.getenv("DB_HOST", "mysql-service"),  # ✅ changed from 127.0.0.1
+        user=os.getenv("DB_USER", "root"),           # optional override
+        password=os.getenv("DB_PASSWORD", "2005"),   # optional override
+        database=os.getenv("DB_NAME", "student_db"), # optional override
+        port=int(os.getenv("DB_PORT", "3306"))       # optional override
     )
     cursor = db.cursor(dictionary=True)
-    print(" Connected to MySQL Database")
+    print("Connected to MySQL Database")
 except mysql.connector.Error as err:
-    raise RuntimeError(f" MySQL connection failed: {err}")
+    raise RuntimeError(f"MySQL connection failed: {err}")
 
 # --------------------------------------------------------
 #  Index Page
@@ -63,7 +64,7 @@ def register():
             <a href="/login">Login Now</a> | <a href="/">⬅ Back to Home</a>
             """
         except mysql.connector.Error as err:
-            print(" Error inserting data:", err)
+            print("Error inserting data:", err)
             return "Error saving data."
 
     return render_template("register.html")
@@ -93,7 +94,7 @@ def login():
             else:
                 return "Invalid credentials."
         except mysql.connector.Error as err:
-            print(" Login error:", err)
+            print("Login error:", err)
             return "Error during login."
 
     return render_template("login.html")
@@ -136,9 +137,8 @@ def courses():
 def test():
     return "Flask is working fine!"
 
-
 # --------------------------------------------------------
 #  Run Flask Server
 # --------------------------------------------------------
-if __name__ == "__main__":
+if _name_ == "_main_":
     app.run(host="0.0.0.0", port=5000, debug=True)
