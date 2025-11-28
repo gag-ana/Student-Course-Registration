@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: namespace
+kind: deployment
 metadata:
   name: jenkins
   namespace: jenkins
