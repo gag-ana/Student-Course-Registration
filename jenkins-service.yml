@@ -5,7 +5,7 @@ metadata:
   namespace: jenkins
 spec:
   replicas: 1
-  selector:
+  selectaaor:
     matchLabels:
       app: jenkins
   template:
