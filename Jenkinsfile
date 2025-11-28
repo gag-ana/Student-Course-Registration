@@ -38,7 +38,12 @@ pipeline {
 
         stage('Azure Login') {
             steps {
-                withCredentials([azureServicePrincipal('azure-sp')]) {
+                withCredentials([
+                    string(credentialsId: 'AZURE_APP_ID', variable: 'CLIENT_ID'),
+                    string(credentialsId: 'AZURE_CLIENT_SECRET', variable: 'CLIENT_SECRET'),
+                    string(credentialsId: 'AZURE_TENANT_ID', variable: 'TENANT_ID'),
+                    string(credentialsId: 'AZURE_SUBSCRIPTION_ID', variable: 'SUBSCRIPTION_ID')
+                ]) {
                     bat """
                     echo Logging into Azure...
                     az login --service-principal ^
