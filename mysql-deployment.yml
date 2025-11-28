@@ -32,7 +32,7 @@ spec:
             - name: MYSQL_DATABASE
               value: "student_db"
           ports:
-            - containerPort: 33306
+            - containerPort: 3306
           volumeMounts:
             - name: mysql-storage
               mountPath: /var/lib/mysql
