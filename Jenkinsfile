@@ -77,8 +77,8 @@ pipeline {
                 kubectl apply -f service.yaml
 
                 echo Deploying Jenkins...
-                kubectl apply -f jenkins-deployment.yaml
-                kubectl apply -f jenkins-service.yaml
+                kubectl apply -f jenkins-deployment.yml
+                kubectl apply -f jenkins-service.yml
 
                 echo Checking rollout status...
                 kubectl rollout status deployment/student-course-registration-deployment
