@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from werkzeug.security import generate_password_hash, check_password_hash
 import mysql.connector
-import requests
 
 app = Flask(__name__)
 app.secret_key = "regilearn_secret_key"
@@ -14,7 +13,6 @@ try:
         database="student_db",
         port=3306
     )
-    cursor = db.cursor(dictionary=True)
     print("Connected to MySQL Database")
 except mysql.connector.Error as err:
     raise RuntimeError(f"MySQL connection failed: {err}")
@@ -23,6 +21,7 @@ except mysql.connector.Error as err:
 @app.route("/")
 def index():
     return render_template("index.html")
+
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -39,12 +38,14 @@ def register():
         password_hash = generate_password_hash(password)
 
         try:
+            cursor = db.cursor(dictionary=True)
             sql = """
                 INSERT INTO users (name, email, department, course, password_hash)
                 VALUES (%s, %s, %s, %s, %s)
             """
             cursor.execute(sql, (name, email, department, course, password_hash))
             db.commit()
+            cursor.close()
             return f"""
             <h2>Registration Successful!</h2>
             <p><strong>Name:</strong> {name}</p>
@@ -55,8 +56,7 @@ def register():
             <a href="/login">Login Now</a> | <a href="/">⬅ Back to Home</a>
             """
         except mysql.connector.Error as err:
-            print("Error inserting data:", err)
-            return "Error saving data."
+            return f"Error saving data: {err.msg}"
 
     return render_template("register.html")
 
@@ -71,8 +71,11 @@ def login():
             return "Email and password are required."
 
         try:
+            cursor = db.cursor(dictionary=True)
             cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
             user = cursor.fetchone()
+            cursor.close()
+
             if user and check_password_hash(user["password_hash"], password):
                 session["user"] = {
                     "name": user["name"],
@@ -83,8 +86,7 @@ def login():
             else:
                 return "Invalid credentials."
         except mysql.connector.Error as err:
-            print("Login error:", err)
-            return "Error during login."
+            return f"Error during login: {err.msg}"
 
     return render_template("login.html")
 
@@ -108,13 +110,16 @@ def logout():
     session.pop("user", None)
     return redirect(url_for("login"))
 
+
 @app.route("/courses")
 def courses():
     return render_template("courses.html")
 
+
 @app.route("/test")
 def test():
     return "Flask is working fine!"
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
