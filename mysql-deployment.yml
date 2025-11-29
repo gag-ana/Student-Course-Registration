@@ -2,7 +2,10 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mysql
+  labels:
+    app: mysql
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: mysql
@@ -12,12 +15,18 @@ spec:
         app: mysql
     spec:
       containers:
-      - name: mysql
-        image: mysql:5.7
-        env:
-        - name: MYSQL_ROOT_PASSWORD
-          value: "2005"
-        - name: MYSQL_DATABASE
-          value: "student_db"
-        ports:
-        - containerPort: 3306
+        - name: mysql
+          image: mysql:5.7
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "2005"
+            - name: MYSQL_DATABASE
+              value: "student_db"
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: mysql-ephemeral
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-ephemeral
+          emptyDir: {}
