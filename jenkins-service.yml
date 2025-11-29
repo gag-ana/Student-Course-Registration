@@ -5,7 +5,7 @@ metadata:
   namespace: jenkins
 spec:
   replicas: 1
-  selectaaor:
+  selector:
     matchLabels:
       app: jenkins
   template:
@@ -19,3 +19,9 @@ spec:
         ports:
         - containerPort: 8080
         - containerPort: 50000
+        volumeMounts:
+        - name: jenkins-home
+          mountPath: /var/jenkins_home
+      volumes:
+      - name: jenkins-home
+        emptyDir: {}
